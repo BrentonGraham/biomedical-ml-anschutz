@@ -1,2 +1,2 @@
 # biomedical-ML-CUanschutz
-Repository to organize all class work from Biomedical Machine Learning course at CU Anschutz
+Repository to organize all projects from Biomedical Machine Learning course at CU Anschutz
