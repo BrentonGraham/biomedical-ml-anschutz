@@ -1,4 +1,6 @@
 import numpy as np
+import tensorflow as tf
+import tensorboard
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
@@ -14,11 +16,11 @@ class NeuralNetwork_MultiLayer(torch.nn.Module):
         self.nFeatures = nFeatures
         self.batchSize = 500
         self.learningRate = 0.001
-        self.nEpochs = 250
+        self.nEpochs = 500
 
         self.fc = torch.nn.Sequential(
             torch.nn.Linear(self.nFeatures, 20),
-            torch.nn.Sigmoid(),  # Activation function after every layer
+            torch.nn.ReLU(),  # Activation function after every layer
             torch.nn.Linear(20, 1),  # In the last layer we are estimating a probability, so need output of 1
             torch.nn.Sigmoid()
         )
@@ -49,7 +51,7 @@ class NeuralNetwork_MultiLayer(torch.nn.Module):
         optimizer = torch.optim.SGD(model.parameters(), lr=self.learningRate, momentum=0.5)  # Optimization approach
 
         # Training
-        writer = SummaryWriter('logs/MultiLayer')  # Initialize logger
+        writer = SummaryWriter()  # Initialize logger
         for epoch in range(self.nEpochs):
             # -> training mode
             model.train()
@@ -67,7 +69,7 @@ class NeuralNetwork_MultiLayer(torch.nn.Module):
                     dtype=torch.float32)
 
                 y = torch.tensor(
-                    trainingLabels[batch * self.batchSize:(batch + 1) * self.batchSize, :].reshape((-1, 1)),
+                    trainingLabels[batch * self.batchSize:(batch + 1) * self.batchSize].reshape((-1, 1)),
                     device=device,
                     dtype=torch.float32)
 
@@ -81,7 +83,6 @@ class NeuralNetwork_MultiLayer(torch.nn.Module):
                 labels_pred = torch.round(y_pred)
                 correct = (y == labels_pred).float()
                 accuracy = correct.sum() / correct.numel()
-
                 epochAccuracy += accuracy * 100 * x.shape[0] / nTrainingSamples
 
             model.train(False)
