@@ -4,7 +4,7 @@ import tensorboard
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
-class NeuralNetwork_MultiLayer(torch.nn.Module):
+class NeuralNetwork_SingleLayer(torch.nn.Module):
 
     def __init__(self, nFeatures):
         '''
@@ -17,11 +17,10 @@ class NeuralNetwork_MultiLayer(torch.nn.Module):
         self.batchSize = 500
         self.learningRate = 0.001
         self.nEpochs = 500
-
+        
+        # Single perceptron - essentially logistic regression
         self.fc = torch.nn.Sequential(
-            torch.nn.Linear(self.nFeatures, 20),
-            torch.nn.ReLU(),  # Activation function after every layer
-            torch.nn.Linear(20, 1),  # In the last layer we are estimating a probability, so need output of 1
+            torch.nn.Linear(self.nFeatures, 1),
             torch.nn.Sigmoid()
         )
 
